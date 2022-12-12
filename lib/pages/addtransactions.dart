@@ -12,6 +12,11 @@ class Addtransactions extends StatefulWidget {
 
 class _AddtransactionsState extends State<Addtransactions> {
   var bval = ['1', '2', '3'];
+  int? amount;
+
+  String type = "Income";
+  DateTime selectedDate = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,7 +80,56 @@ class _AddtransactionsState extends State<Addtransactions> {
             SizedBox(
               width: 10,
             ),
-            //Expanded(child: DropdownButton(items: [], onChanged: onChanged)),
+            Expanded(
+                child: TextFormField(
+              decoration: InputDecoration(
+                hintText: ("Enter Customer"),
+                border: InputBorder.none,
+              ),
+              onChanged: ((value) {
+                amount = int.parse(value);
+              }),
+              style: TextStyle(
+                fontSize: 25,
+              ),
+            )),
+          ]),
+          SizedBox(
+            height: 20,
+          ),
+          Row(children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 15),
+              child: Container(
+                  decoration: BoxDecoration(
+                      color: Static.PrimaryColor,
+                      borderRadius: BorderRadius.circular(16.0)),
+                  padding: EdgeInsets.all(16.0),
+                  child: Icon(
+                    CupertinoIcons.calendar,
+                    color: Colors.white,
+                    size: 25,
+                  )),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",
+              style: TextStyle(fontSize: 20),
+            ),
+            TextButton(
+                onPressed: (() {
+                  showDatePicker(
+                      context: context,
+                      initialDate: selectedDate,
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100));
+                }),
+                child: Text(
+                  "Select Date",
+                  style: TextStyle(fontSize: 20, color: Static.PrimaryColor),
+                )),
           ]),
           Padding(
             padding: const EdgeInsets.only(left: 100),
@@ -87,40 +141,61 @@ class _AddtransactionsState extends State<Addtransactions> {
                 label: Text(
                   "Income",
                   style: TextStyle(
-                      color: Type == "Income" ? Colors.white : Colors.black),
+                    fontSize: 18.0,
+                    color: type == "Income" ? Colors.white : Colors.black,
+                  ),
                 ),
                 selectedColor: Static.PrimaryColor,
-                selected: Type == "Income" ? true : false,
-                onSelected: ((value) {
-                  if (value) {
-                    setState(() {});
+                onSelected: (val) {
+                  if (val) {
+                    setState(() {
+                      type = "Income";
+                      if (type.isEmpty || type == "Expense") {
+                        type = 'Income';
+                      }
+                    });
                   }
-                }),
+                },
+                selected: type == "Income" ? true : false,
               ),
               SizedBox(
-                width: 10,
+                width: 10.0,
               ),
               ChoiceChip(
                 label: Text(
                   "Expense",
                   style: TextStyle(
-                      color: Type == "Expense" ? Colors.white : Colors.black),
+                    fontSize: 18.0,
+                    color: type == "Expense" ? Colors.white : Colors.black,
+                  ),
                 ),
                 selectedColor: Static.PrimaryColor,
-                selected: Type == "Expense" ? true : false,
-                onSelected: ((value) {
-                  if (value) {
-                    setState(() {});
+                onSelected: (val) {
+                  if (val) {
+                    setState(() {
+                      type = "Expense";
+
+                      if (type.isEmpty || type == "Income") {
+                        type = 'Expense';
+                      }
+                    });
                   }
-                }),
+                },
+                selected: type == "Expense" ? true : false,
               ),
             ]),
+          ),
+          SizedBox(
+            height: 20,
           ),
           Padding(
             padding: const EdgeInsets.only(left: 20, right: 20),
             child: SizedBox(
                 height: 50,
                 child: ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(Static.PrimaryColor)),
                   onPressed: (() {}),
                   child: Text("ADD Transaction"),
                 )),
